@@ -9,6 +9,7 @@ namespace Drupal\countdown_event\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Datetime;
 
 /**
  * Provides a 'CountDownBlock' block.
@@ -25,12 +26,15 @@ class CountDownBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function blockForm($form, FormStateInterface $form_state) {
+    $current_time = date('Y-m-d h:i:s', time());
+//    if(isset($this->configuration['countdown_event_date'])) { var_dump($this->configuration['countdown_event_date']);}
     $form['countdown_event_date'] = array(
-      '#type' => 'select',
+      '#type' => 'datelist',
       '#title' => $this->t('Event date'),
       '#description' => $this->t('Select event date.'),
-      '#options' => array('1' => $this->t('1'), '2' => $this->t('2'), '3' => $this->t('3')),
-      '#default_value' => isset($this->configuration['countdown_event_date']) ? $this->configuration['countdown_event_date'] : '1',
+      '#default_value' => isset($this->configuration['countdown_event_date']) ? new \Drupal\Core\Datetime\DrupalDateTime($this->configuration['countdown_event_date']) : new \Drupal\Core\Datetime\DrupalDateTime($current_time),
+      '#date_part_order' => array('year', 'month', 'day', 'hour', 'minute'),
+      '#date_year_range' => '2010:2020',
       '#weight' => '0',
     );
     $form['countdown_event_label_msg'] = array(
@@ -76,8 +80,22 @@ class CountDownBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
+  public function blockValidate($form, FormStateInterface $form_state) {
+    parent::blockValidate($form, $form_state);
+    dpm($form_state);
+//    $date_time = $form_state->getValue('countdown_event_date');
+//    var_dump($date_time);
+//    die;
+//    if ($date_time->hasError()) {
+//      $form_state->setErrorByName('countdown_event_date', t('Dude do not be so smart.'));
+//    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function blockSubmit($form, FormStateInterface $form_state) {
-    $this->configuration['countdown_event_date'] = $form_state->getValue('countdown_event_date');
+    $this->configuration['countdown_event_date'] = $form_state->getValue('countdown_event_date')->format('Y-m-d h:i:s');
     $this->configuration['countdown_event_label_msg'] = $form_state->getValue('countdown_event_label_msg');
     $this->configuration['countdown_event_label_color'] = $form_state->getValue('countdown_event_label_color');
     $this->configuration['countdown_event_background_color'] = $form_state->getValue('countdown_event_background_color');
