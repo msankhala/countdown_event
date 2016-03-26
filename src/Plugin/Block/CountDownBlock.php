@@ -9,7 +9,7 @@ namespace Drupal\countdown_event\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Datetime;
+use Drupal\Core\Datetime\DrupalDateTime;
 
 /**
  * Provides a 'CountDownBlock' block.
@@ -27,12 +27,11 @@ class CountDownBlock extends BlockBase {
    */
   public function blockForm($form, FormStateInterface $form_state) {
     $current_time = date('Y-m-d h:i:s', time());
-//    if(isset($this->configuration['countdown_event_date'])) { var_dump($this->configuration['countdown_event_date']);}
     $form['countdown_event_date'] = array(
       '#type' => 'datelist',
       '#title' => $this->t('Event date'),
       '#description' => $this->t('Select event date.'),
-      '#default_value' => isset($this->configuration['countdown_event_date']) ? new \Drupal\Core\Datetime\DrupalDateTime($this->configuration['countdown_event_date']) : new \Drupal\Core\Datetime\DrupalDateTime($current_time),
+      '#default_value' => isset($this->configuration['countdown_event_date']) ? new DrupalDateTime($this->configuration['countdown_event_date']) : new DrupalDateTime($current_time),
       '#date_part_order' => array('year', 'month', 'day', 'hour', 'minute'),
       '#date_year_range' => '2010:2020',
       '#weight' => '0',
@@ -47,8 +46,8 @@ class CountDownBlock extends BlockBase {
       '#weight' => '0',
     );
     $form['countdown_event_label_color'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Enter your label color here in #hex or html name format'),
+      '#type' => 'color',
+      '#title' => $this->t('Enter your label color here in #hex format. e.g #fffff'),
       '#description' => $this->t(''),
       '#default_value' => isset($this->configuration['countdown_event_label_color']) ? $this->configuration['countdown_event_label_color'] : '',
       '#maxlength' => 7,
@@ -56,8 +55,8 @@ class CountDownBlock extends BlockBase {
       '#weight' => '0',
     );
     $form['countdown_event_background_color'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Enter your background color in #hex or html name format'),
+      '#type' => 'color',
+      '#title' => $this->t('Enter your background color in #hex format. e.g #fffff'),
       '#description' => $this->t(''),
       '#default_value' => isset($this->configuration['countdown_event_background_color']) ? $this->configuration['countdown_event_background_color'] : '',
       '#maxlength' => 7,
@@ -65,10 +64,10 @@ class CountDownBlock extends BlockBase {
       '#weight' => '0',
     );
     $form['countdown_event_text_color'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Enter your digit color in #hex or html name format'),
+      '#type' => 'color',
+      '#title' => $this->t('Enter your digit color in #hex format. e.g #fffff'),
       '#description' => $this->t(''),
-      '#default_value' => isset($this->configuration['countdown_event_text_color']) ? $this->configuration['countdown_event_text_color'] : '',
+      '#default_value' => isset($this->configuration['countdown_event_text_color']) ? $this->configuration['countdown_event_text_color'] : '#fff',
       '#maxlength' => 7,
       '#size' => 7,
       '#weight' => '0',
@@ -82,11 +81,8 @@ class CountDownBlock extends BlockBase {
    */
   public function blockValidate($form, FormStateInterface $form_state) {
     parent::blockValidate($form, $form_state);
-    dpm($form_state);
-//    $date_time = $form_state->getValue('countdown_event_date');
-//    var_dump($date_time);
-//    die;
-//    if ($date_time->hasError()) {
+    $drupal_date_time = $form_state->getValue('countdown_event_date');
+//    if ($drupal_date_time->hasErrors()) {
 //      $form_state->setErrorByName('countdown_event_date', t('Dude do not be so smart.'));
 //    }
   }
@@ -107,11 +103,16 @@ class CountDownBlock extends BlockBase {
    */
   public function build() {
     $build = [];
-    $build['countdown_event_countdown_event_date']['#markup'] = '<p>' . $this->configuration['countdown_event_date'] . '</p>';
-    $build['countdown_event_countdown_event_label_msg']['#markup'] = '<p>' . $this->configuration['countdown_event_label_msg'] . '</p>';
-    $build['countdown_event_countdown_event_label_color']['#markup'] = '<p>' . $this->configuration['countdown_event_label_color'] . '</p>';
-    $build['countdown_event_countdown_event_background_color']['#markup'] = '<p>' . $this->configuration['countdown_event_background_color'] . '</p>';
-    $build['countdown_event_countdown_event_text_color']['#markup'] = '<p>' . $this->configuration['countdown_event_text_color'] . '</p>';
+//    $build['countdown_event_countdown_event_date']['#markup'] = '<p>' . $this->configuration['countdown_event_date'] . '</p>';
+//    $build['countdown_event_countdown_event_label_msg']['#markup'] = '<p>' . $this->configuration['countdown_event_label_msg'] . '</p>';
+//    $build['countdown_event_countdown_event_label_color']['#markup'] = '<p>' . $this->configuration['countdown_event_label_color'] . '</p>';
+//    $build['countdown_event_countdown_event_background_color']['#markup'] = '<p>' . $this->configuration['countdown_event_background_color'] . '</p>';
+//    $build['countdown_event_countdown_event_text_color']['#markup'] = '<p>' . $this->configuration['countdown_event_text_color'] . '</p>';
+    $build['subject'] = t('Countdown event');
+    $build['content'] = array(
+      '#theme' => 'countdown_event',
+      '#attached' => countdown_event_attach(),
+    );
 
     return $build;
   }

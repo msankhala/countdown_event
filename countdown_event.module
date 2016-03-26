@@ -28,3 +28,33 @@ function countdown_event_help($route_name, RouteMatchInterface $route_match) {
       return check_markup(file_get_contents(dirname(__FILE__) . "/README.txt"));
   }
 }
+
+/**
+ * Implements hook_theme().
+ */
+function countdown_event_theme() {
+  return array(
+    'countdown_event' => array(
+      'template'  => 'countdown_event',
+    ),
+  );
+}
+
+/**
+ * Adds javascript and css to the block.
+ */
+function countdown_event_attach() {
+  $attach = array();
+  // Attach library containing css and js files.
+  $attach['library'][] = 'countdown_event/countdown_event';
+  // Add configuration to javascript.
+  $attach['drupalSettings']['countdown_event']['countdownEvent'] = array(
+    'countdown_event_date' =>'bar',
+    'countdown_event_label_msg' =>'bar',
+    'countdown_event_label_color' =>'bar',
+    'countdown_event_text_color' =>'bar',
+    'countdown_event_background_color' =>'bar',
+  );
+
+  return $attach;
+}
