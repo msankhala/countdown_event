@@ -111,10 +111,29 @@ class CountDownBlock extends BlockBase {
     $build['subject'] = t('Countdown event');
     $build['content'] = array(
       '#theme' => 'countdown_event',
-      '#attached' => countdown_event_attach(),
+      '#attached' => $this->attachConfiguration(),
     );
 
     return $build;
+  }
+
+  /**
+   * Adds javascript and css to the block.
+   */
+  public function attachConfiguration() {
+    $attach = array();
+    // Attach library containing css and js files.
+    $attach['library'][] = 'countdown_event/countdown_event';
+    // Add configuration to javascript.
+    $attach['drupalSettings']['countdown_event']['countdownEvent'] = array(
+      'countdown_event_date'             => strtotime($this->configuration['countdown_event_date']),
+      'countdown_event_label_msg'        => $this->configuration['countdown_event_label_msg'],
+      'countdown_event_label_color'      => $this->configuration['countdown_event_label_color'],
+      'countdown_event_text_color'       => $this->configuration['countdown_event_text_color'],
+      'countdown_event_background_color' => $this->configuration['countdown_event_background_color'],
+    );
+
+    return $attach;
   }
 
 }
