@@ -105,7 +105,7 @@
             nodeName.removeChild(nodeName.childNodes[0]);
           };
 
-          for (i = 0; i < nodes.length; i++) {
+          for (var i = 0; i < nodes.length; i++) {
             removeNode(nodes[i]);
           }
         } // end if.
