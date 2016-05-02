@@ -4,12 +4,15 @@
  *
  * Author: Mark Collins
  */
-(function ($) {
+(function($, Drupal, drupalSettings, document, window, undefined) {
   'use strict';
   Drupal.behaviors.countdown_event = {
     attach: function (context, settings) {
-      // event date/time from the countdown module with timezone offset correction.
+      var now = Date.now();
+      // Convert event date to milliseconds.
       var countdownDate = (drupalSettings.countdown_event.countdownEvent.countdown_event_date * 1000);
+
+      // event date/time from the countdown module with timezone offset correction.
       var labelMsg = (drupalSettings.countdown_event.countdownEvent.countdown_event_label_msg);
       var labelColor = (drupalSettings.countdown_event.countdownEvent.countdown_event_label_color);
       var textColor = (drupalSettings.countdown_event.countdownEvent.countdown_event_text_color);
@@ -33,7 +36,7 @@
       document.getElementById('label_msg').innerHTML = labelMsg;
 
       // add the custom label color.
-      var label = document.getElementById('clock_holder');
+      var label = document.getElementById('countdown-event-clock-holder');
       label.style.color = labelColor;
       var units = ['countdownDays', 'countdownHrs', 'countdownMins', 'countdownSecs'];
 
@@ -127,5 +130,5 @@
       }, 1000);
     }
   };
-})(jQuery);
+})(jQuery, Drupal, drupalSettings, this.document, this);
 

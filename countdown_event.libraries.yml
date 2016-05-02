@@ -8,3 +8,7 @@ countdown_event:
   # Add js files.
   js:
     js/countdown_event.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
