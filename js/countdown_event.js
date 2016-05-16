@@ -4,14 +4,12 @@
  *
  * Author: Mark Collins
  */
-(function($, Drupal, drupalSettings, document, window, undefined) {
+(function ($, Drupal, drupalSettings, document, window, undefined) {
   'use strict';
   Drupal.behaviors.countdown_event = {
     attach: function (context, settings) {
-      var now = Date.now();
       // Convert event date to milliseconds.
       var countdownDate = (drupalSettings.countdown_event.countdownEvent.countdown_event_date * 1000);
-
       // event date/time from the countdown module with timezone offset correction.
       var labelMsg = (drupalSettings.countdown_event.countdownEvent.countdown_event_label_msg);
       var labelColor = (drupalSettings.countdown_event.countdownEvent.countdown_event_label_color);
@@ -49,11 +47,11 @@
           // add class style.
 
           // For IE.
-          styledDiv.setAttribute("class", 'countdownDigitBk');
+          styledDiv.setAttribute('class', 'countdownDigitBk');
           // For Most Browsers
-          styledDiv.setAttribute("className", 'countdownDigitBk');
+          styledDiv.setAttribute('className', 'countdownDigitBk');
         });
-      };
+      }
 
       // apply styling by calling function.
       customStyle(units, backgroundColor, textColor);
@@ -96,7 +94,7 @@
         minDiffMins = addLeadZero(minDiffMins);
         secDiffSecs = addLeadZero(secDiffSecs);
 
-        var nodes = new Array();
+        var nodes = [];
         nodes[0] = document.getElementById('countdownDays');
         nodes[1] = document.getElementById('countdownHrs');
         nodes[2] = document.getElementById('countdownMins');

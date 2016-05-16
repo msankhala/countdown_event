@@ -2,9 +2,9 @@
 
 /**
  * @file
- * This module provides a block to display the countdown event module
+ * This module provides a block to display the countdown event module.
  *
- * Author: Mahesh Sankhala
+ * Author: Mahesh Sankhala.
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -32,6 +32,9 @@ function countdown_event_theme() {
   return array(
     'countdown_event' => array(
       'template'  => 'countdown_event',
+      'variables'   => array(
+        'expired' => FALSE,
+      ),
     ),
   );
 }

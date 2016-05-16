@@ -95,11 +95,19 @@ class CountDownBlock extends BlockBase {
   public function build() {
     $build = [];
     $build['subject'] = t('Countdown event');
+    $current_time = \time();
+    $event_time = strtotime($this->configuration['countdown_event_date']);
     $build['content'] = array(
       '#theme'    => 'countdown_event',
-      '#attached' => $this->attachConfiguration(),
     );
 
+    // If event expired early return without attaching countdown_event.js file.
+    if ($current_time >= $event_time) {
+      $build['content']['#expired'] = TRUE;
+      return $build;
+    }
+
+    $build['content']['#attached'] = $this->attachConfiguration();
     return $build;
   }
 
